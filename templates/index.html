@@ -1,0 +1,14 @@
+<html>
+	<head>
+		
+	</head>
+	<body>
+		<p>input data: {{ input_data }}</p>
+		<p>cf combine: {{ cf_combine }}</p>
+		<p>rules: </p>
+		{% for nomor, rules, bobot in rules_bobot  %}
+			<p>{{ nomor }}. {{ rules }}</p>
+			<p>{{ bobot }}</p>
+		{% endfor %}
+	</body>
+</html>
