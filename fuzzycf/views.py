@@ -21,6 +21,8 @@ def index(request):
 		'nilai_rules': perhitungan.get_nilai_rules(),
 		'human_rules': perhitungan.get_human_rules(),
 		'human_bobot': perhitungan.get_human_bobot(),
+		'human_nilai': perhitungan.get_human_nilai(),
+		'rules_nilai': zip(nomor, perhitungan.get_human_rules(), perhitungan.get_human_nilai()),
 		'rules_bobot': zip(nomor, perhitungan.get_human_rules(), perhitungan.get_human_bobot()),
 		'z': perhitungan.get_z(),
 	}

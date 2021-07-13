@@ -113,6 +113,22 @@ class Perhitungan:
         
         return human_bobot
 
+    def get_human_nilai(self):
+        human_nilai = []
+        nilai = self.nilai_fuzzy
+        rules = self.rules
+        for i in range(len(self.rules)):
+            v_fuzzy = [nilai[x][rules[i][x]] for x in range(5)]
+            v_nonfuzzy = [nilai[x][0] for x in range(5,13)]
+            combine_v = v_fuzzy + v_nonfuzzy
+            combine_v = [f'{self._algs[x].get_identitas()} {str(round(combine_v[x], 3))}' for x in range(len(combine_v))]
+            string_human = ' & '.join(combine_v)
+            string_human = f'IF {string_human} = {round(self.nilai_prediket[i],4)}'
+            human_nilai.append(string_human)
+        
+        return human_nilai
+        
+
     def get_cf_combine(self):
         return self.cf_combine
 
