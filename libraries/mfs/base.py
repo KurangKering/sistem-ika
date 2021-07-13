@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import skfuzzy as fuzz
 from numpy import unravel_index
 import itertools
