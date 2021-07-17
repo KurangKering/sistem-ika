@@ -7,6 +7,8 @@ from django.forms.models import model_to_dict
 import openpyxl
 from itertools import islice
 from django.db import connection
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 # Create your views here.
@@ -16,6 +18,7 @@ def index(request):
 
 	return render(request, 'data_uji/index.html')
 
+@csrf_exempt
 def detail(request):
     id_data_uji = request.POST.get('id')
     if (id_data_uji == None or id_data_uji == ''):
@@ -29,7 +32,7 @@ def detail(request):
 
     return JsonResponse(context, safe=False)
 
-
+@csrf_exempt
 def insert_or_update(request):
 
 	id_data_uji = request.POST.get('id')
@@ -41,7 +44,7 @@ def insert_or_update(request):
 
 	return JsonResponse(context, safe=False)
 
-
+@csrf_exempt
 def insert(request):
     form = DataUjiForm(request.POST)
     if form.is_valid():
@@ -71,7 +74,7 @@ def insert(request):
 
     return context
 
-
+@csrf_exempt
 def update(request):
 	form = DataUjiForm(request.POST)
 
@@ -101,7 +104,8 @@ def update(request):
 		context = context_response(False, form.errors)
 
 	return context
-
+	
+@csrf_exempt
 def delete(request):
     id_data_uji = request.POST.get('id')
     data_uji = DataUji.objects.get(pk=id_data_uji)
@@ -113,7 +117,7 @@ def delete(request):
 
     return JsonResponse(context, safe=False)
 
-
+@csrf_exempt
 def import_data(request):
 
 	excel_file = request.FILES['excel_file']
