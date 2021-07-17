@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from fuzzycf import views as fuzzycf_views
+
 urlpatterns = [
 	path('', fuzzycf_views.index, name="index"),
     path('admin/', admin.site.urls),
     path('', include('fuzzycf.urls')),
+    path('data-uji/', include('data_uji.urls')),
+    path('pengujian/', include('pengujian.urls')),
 
 ]
