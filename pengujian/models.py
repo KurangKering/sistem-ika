@@ -5,6 +5,7 @@ from data_uji.models import DataUji
 
 class DataPengujian(models.Model):
 	rules = models.TextField()
+	kelas = models.IntegerField()
 	cf_combine = models.FloatField()
 	data_uji = models.OneToOneField(
         DataUji,

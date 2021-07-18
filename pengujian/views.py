@@ -6,21 +6,51 @@ from libraries.perhitungan import Perhitungan
 from .models import DataPengujian
 from .forms import DataPengujianForm
 from django.forms.models import model_to_dict
+from utils.helper import set_kelas_klasifikasi
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
 	pass
 
+@csrf_exempt
 def detail(request):
 
     id_data_uji = request.POST.get('id')
-    data_uji = DataUji.objects.get(pk=id_data_uji)
-    data_pengujian = data_uji.datapengujian
-    serial_data_uji = model_to_dict(data_uji)
+    data_pengujian = DataPengujian.objects.get(data_uji_id=id_data_uji)
+    serial_data_uji = model_to_dict(data_pengujian.data_uji)
     serial_data_pengujian = model_to_dict(data_pengujian)
 
     context = context_response(True, {'data_uji': serial_data_uji, 'data_pengujian': serial_data_pengujian})
 
     return JsonResponse(context, safe=False)
+
+def index_pengujian_data_uji(request):
+
+    data_pengujian = DataPengujian.objects.all()
+    total_data_pengujian = DataPengujian.objects.count()
+    total_benar = 0
+    for data in data_pengujian:
+        if (data.kelas == data.data_uji.target):
+            total_benar = total_benar + 1
+
+    total_salah = 0
+    akurasi = 0
+    if (total_data_pengujian > 0):
+        total_salah = total_data_pengujian - total_benar
+        akurasi = total_benar / total_data_pengujian * 100
+
+    context = {
+        'total_data': total_data_pengujian,
+        'total_benar': total_benar,
+        'total_salah': total_salah,
+        'akurasi': round(akurasi,2)
+    }
+    context = context_response(True, context)
+    return render(request, 'pengujian/index_pengujian_data_uji.html', context)
+
+def index_pengujian_tunggal(request):
+
+    return render(request, 'pengujian/index_pengujian_tunggal.html')
 
 def pengujian_data_uji(request):
     data_uji_objects = DataUji.objects.all()
@@ -28,6 +58,8 @@ def pengujian_data_uji(request):
     target_data_uji = data_uji_objects.values_list('target')
 
     data_uji_perhitungan = [list(x) for x in daftar_data_uji]
+    list_data_pengujian = []
+    total_benar = 0
     for index_uji, data_uji in enumerate(data_uji_objects):
         perhitungan = Perhitungan(data_uji_perhitungan[index_uji])
         perhitungan.mulai_perhitungan()
@@ -35,12 +67,30 @@ def pengujian_data_uji(request):
         human_rules =  perhitungan.get_human_rules()
         data_uji.datapengujian = DataPengujian()
         data_uji.datapengujian.cf_combine = cf_combine
+        kelas = set_kelas_klasifikasi(cf_combine)
+        data_uji.datapengujian.kelas = kelas
         data_uji.datapengujian.rules = human_rules
-        data_uji.datapengujian.save()
+        list_data_pengujian.append(data_uji.datapengujian)
+        if (kelas == data_uji.target):
+            total_benar = total_benar + 1
 
-    context = context_response(True, {})
+    delete_old = DataPengujian.objects.all().delete()
+    bulk_create = DataPengujian.objects.bulk_create(list_data_pengujian)
+
+    total_data_pengujian = len(list_data_pengujian)
+    total_salah = total_data_pengujian - total_benar
+    akurasi = total_benar / total_data_pengujian * 100
+
+    context = {
+        'total_data': total_data_pengujian,
+        'total_benar': total_benar,
+        'total_salah': total_salah,
+        'akurasi': round(akurasi,2)
+    }
+    context = context_response(True, context)
     return JsonResponse(context, safe=False)
 
+@csrf_exempt
 def pengujian_tunggal(request):
     form = DataPengujianForm(request.POST)
     if form.is_valid():

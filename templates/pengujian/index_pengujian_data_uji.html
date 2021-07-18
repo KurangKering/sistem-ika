@@ -4,46 +4,40 @@
 
 {% endblock import-css %}
 {% block inline-css %}
+<style>
+#container-button {
+	position: absolute;
+	top: -5px;
+	right: 5px;
+	margin: 0;
+	padding: 0;
+}
+</style>
 {% endblock inline-css %}
 {% block content %}
 <div class="block-header">
-	<h2>Data Uji</h2>
+	<h2>Pengujian Data Uji</h2>
+
 </div>
 
 <div class="row clearfix">
-	<div class="col-lg-12 col-md-12 col-sm-12">
+	<div class="col-lg-8 col-md-8 col-sm-12">
 		<div class="card">
-			<div class="header">
-				<ul class="header-dropdown">
-					<li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-more-vert"></i></a>
-						<ul class="dropdown-menu float-right">
-							<li><a href="javascript:void(0);" onclick="show_tambah_modal()" class=" waves-effect waves-block">Tambah</a></li>
-							<li><a href="javascript:void(0);" onclick="" id="import_data_button" class=" waves-effect waves-block">Import Excel</a></li>
-						</ul>
-					</li>
-				</ul>
+			<div class="header" style="margin-bottom: 20px">
+				<div id="container-button">
+					<button id="btn-mulai-pengujian" type="button" class="btn-sm btn  btn-raised bg-light-blue waves-effect">Mulai Pengujian</button>
+				</div>
 			</div>
 			<div class="body">
 				<div class="table-responsive">
-					<table id="data_uji_table" class="table table-striped">
+					<table id="data_pengujian_table" class="table table-striped">
 						<thead>
 							<tr>
-								<th>#</th>
-								<th>Nama</th>
-								<th>age</th>
-								<th>trestbps</th>
-								<th>chol</th>
-								<th>thalach</th>
-								<th>oldpeak</th>
-								<th>sex</th>
-								<th>cp</th>
-								<th>fbs</th>
-								<th>restach</th>
-								<th>exang</th>
-								<th>slope</th>
-								<th>ca</th>
-								<th>thal</th>
-								<th>target</th>
+								<th>ID</th>
+								<th>CF Combine</th>
+								<th>Target</th>
+								<th>Klasifikasi</th>
+								<th>Kesimpulan</th>
 								<th>Action</th>
 							</tr>
 						</thead>
@@ -53,20 +47,31 @@
 			</div>
 		</div>
 	</div>
+	<div class="col-lg-4 col-md-4 col-sm-12">
+		<div class="card">
+
+			<div class="body">
+				<p>detail hasil pengujian disini</p>
+				<p>jumlah data uji : <span id="total_data">{{ messages.total_data }}</span></p>
+				<p>jumlah benar : <span id="total_benar">{{ messages.total_benar }}</span></p>
+				<p>jumlah salah : <span id="total_salah">{{ messages.total_salah }}</span></p>
+				<p>AKURASI: <span id="akurasi">{{ messages.akurasi }} %</span></p>
+			</div>
+		</div>
+	</div>
 </div>
 
 
-<!-- Large Size -->
-<div class="modal fade" id="data_uji_modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="pengujian_data_uji_modal" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="card">
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="header">
-						<h2 id="data-uji-modal-title">Data Uji </h2>
+						<h2 id="pengujian-data-uji-modal-title">Detail Hasil Pengujian </h2>
 					</div>
 				</div>
-				<form id="data_uji_form" method="POST">
+				<form id="pengujian_data_uji_form" method="POST">
 					<input type="hidden" name="id" value="id" id="id">
 					<div class="modal-body">
 						
@@ -245,66 +250,11 @@
 		</div>
 	</div>
 </div>
-<div class="modal fade" id="import_data_modal" tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="card">
-			<div class="modal-content">
-				<div class="modal-header">
-					<div class="header">
-						<h2 id="import-data-modal-title">IMPORT DATA UJI </h2>
-					</div>
-				</div>
-				<form id="import_data_form" method="POST">
-					<input type="hidden" name="id" value="id" id="id">
-					<div class="modal-body">
-						
-						<div class="body">
-							
-							
-							
-							
-							
-							<div class="row clearfix">
-								
-								<div class="col-lg-12 col-md-12 col-sm-12">
-									<div class="form-group">
-										<input type="file" id="excel_file" name="excel_file" class="form-control">
 
-									</div>
-								</div>
-							</div>
-							<div class="row clearfix">
-								<div class="col-lg-12 col-md-12 col-sm-12">
-									<div class="form-group">
-										<div class="form-line">
-											<label> <input type="checkbox" class="i-checks" name="hapus_seluruh_data"  id="hapus_seluruh_data"> Hapus seluruh data </label>
-										</div>
-										
-									</div>
-									
-								</div>
-								
-								
-							</div>
-							
-							
-							<div class="col-sm-12" style="text-align:right">
-								<button type="button" class="btn btn-raised" data-dismiss="modal">Cancel</button>
-								<button type="submit" class="btn btn-raised g-bg-cyan">Submit</button>
-							</div>
-							
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
 
-<template  id="render-action-button-template">
+<template  id="render-detail-button-template">
 	<div class="btn-group" role="group">
-		<button type="button" class="btn btn-raised btn-circle waves-effect waves-circle waves-float bg-orange" onclick="show_edit_modal('place_here')" title="edit data"><i class="material-icons">mode_edit</i> </button>
-		<button type="button" class="btn btn-raised btn-circle waves-effect waves-circle waves-float bg-deep-orange" onclick="show_delete_modal('place_here')" title="delete data"> <i class="material-icons">delete</i> </button>
+		<button type="button" class="btn btn-raised btn-circle waves-effect waves-circle waves-float bg-cyan" onclick="show_detail_modal('place_here')" title="detail"><i class="material-icons">format_align_justify</i> </button>
 
 	</div>
 	
@@ -319,8 +269,29 @@
 <script>
 
 $(function() {
-	$("#data_uji_modal").appendTo('body');
-	$("#import_data_modal").appendTo('body');
+	$("#btn-mulai-pengujian").click(function(e) {
+		$(".page-loader-wrapper").fadeIn();
+		$.ajax({
+			url: "{% url 'pengujian/pengujian_data_uji' %}",
+			type: 'GET',
+		})
+		.done(function(response) {
+			if (!response.success) {
+
+			} else {
+
+				$("#total_data").text(response.messages.total_data)
+				$("#total_benar").text(response.messages.total_benar)
+				$("#total_salah").text(response.messages.total_salah)
+				$("#akurasi").text(response.messages.akurasi)
+				$(".page-loader-wrapper").fadeOut();
+				data_pengujian_table.ajax.reload(null, false);
+				Swal.fire({icon: 'success', showConfirmButton: false, timer: 1000})
+
+			}
+		});
+	})
+	$("#pengujian_data_uji_modal").appendTo('body');
 	$("#data_uji_form").submit(function(e) {
 		e.preventDefault();
 
@@ -336,8 +307,8 @@ $(function() {
 
 			} else {
 				clearForm();
-				data_uji_table.ajax.reload(null, false);
-				$("#data_uji_modal").modal('hide');
+				data_pengujian_table.ajax.reload(null, false);
+				$("#pengujian_data_uji_modal").modal('hide');
 				Swal.fire({icon: 'success', showConfirmButton: false, timer: 1000})
 
 			}
@@ -362,7 +333,7 @@ $(function() {
 		.done(function(response) {
 			if (response.success) {
 				clearFormImport();
-				data_uji_table.ajax.reload(null, false);
+				data_pengujian_table.ajax.reload(null, false);
 				$("#import_data_modal").modal('hide');
 				Swal.fire({icon: 'success', showConfirmButton: false, timer: 1000})
 			}
@@ -378,44 +349,57 @@ $(function() {
 		show_import_modal();
 	});
 
-	let data_uji_table = $("#data_uji_table").DataTable({
+	let data_pengujian_table = $("#data_pengujian_table").DataTable({
 		"processing": true,
 		"serverSide": true,
-		"scrollX": true,
-		"ajax": "{% url 'data-uji/datatable_data_uji' %}",
+		"ajax": "{% url 'pengujian/datatable_data_pengujian' %}",
 		"columns": [
 
-		{ "data": "id" },
-		{ "data": "nama_pasien" },
-		{ "data": "age" },
-		{ "data": "trestbps" },
-		{ "data": "chol" },
-		{ "data": "thalach" },
-		{ "data": "oldpeak" },
-		{ "data": "sex" },
-		{ "data": "cp" },
-		{ "data": "fbs" },
-		{ "data": "restach" },
-		{ "data": "exang" },
-		{ "data": "slope" },
-		{ "data": "ca" },
-		{ "data": "thal" },
+		{ "data": "data_uji_id" },
+		{ "data": "cf_combine" },
 		{ "data": "target" },
+		{ "data": "kelas" },
+		{ "data": null },
 		{ "data": null },
 		],
-		"columnDefs": [ {
+		"columnDefs": [ 
+		{
+			"targets": 4,
+			"data": null,
+			"sortable": true,
+			"render" : function(data, type, row) {
+				let cf_combine = row['cf_combine'];
+				let klasifikasi = row['kelas'];
+				let target = row['target'];
+				if (klasifikasi == target) {
+					return 'sesuai';
+				}
+				else {
+					return 'tidak sesuai';
+				}
+			}
+		},
+		{
 			"targets": -1,
 			"data": null,
 			"sortable": false,
 			"render" : function(data, type, row) {
-				return render_edit_delete_button(row['id']);
+				return render_detail_template(row['data_uji_id']);
 			}
-		} ],
+		},
+
+		],
 		
 
 	});
 });
 
+function checkKelas(cf_combine) {
+	if (cf_combine >= 0.7)
+		return 1;
+	else 
+		return 0;
+}
 function clearForm() {
 
 	$("#data_uji_form").find('input').val('');
@@ -437,7 +421,7 @@ function show_import_modal() {
 function show_tambah_modal() {
 	clearForm();
 	$("#data-uji-modal-title").text('Form tambah data kiper');
-	$("#data_uji_modal").modal('show');
+	$("#pengujian_data_uji_modal").modal('show');
 }
 
 function show_delete_modal(id) {
@@ -462,7 +446,7 @@ function show_delete_modal(id) {
 				if (!response.success) {
 
 				} else {
-					$("#data_uji_table").DataTable().ajax.reload(null, false);
+					$("#data_pengujian_table").DataTable().ajax.reload(null, false);
 					Swal.fire({icon: 'success', showConfirmButton: false, timer: 1000})
 				}
 			});
@@ -472,11 +456,11 @@ function show_delete_modal(id) {
 
 
 }
-function show_edit_modal(id) {
+function show_detail_modal(id) {
 
 
 	$.ajax({
-		url: "{% url 'data-uji/detail' %}",
+		url: "{% url 'pengujian/detail' %}",
 		type: 'POST',
 		data: {id: id},
 	})
@@ -484,33 +468,14 @@ function show_edit_modal(id) {
 		if (!response.success) {
 
 		} else {
-			$('#id').val(response.messages.id);	
-			$("#nama_pasien").val(response.messages.nama_pasien);
-			$("#age").val(response.messages.age);
-			$("#trestbps").val(response.messages.trestbps);
-			$("#chol").val(response.messages.chol);
-			$("#thalach").val(response.messages.thalach);
-			$("#oldpeak").val(response.messages.oldpeak);
-			$("#sex").val(response.messages.sex);
-			$("#cp").val(response.messages.cp);
-			$("#fbs").val(response.messages.fbs);
-			$("#restach").val(response.messages.restach);
-			$("#exang").val(response.messages.exang);
-			$("#slope").val(response.messages.slope);
-			$("#ca").val(response.messages.ca);
-			$("#thal").val(response.messages.thal);
-			$("#target").val(response.messages.target);
-			$("#data-uji-modal-title").text('Form ubah data uji');
-
-			$("#data_uji_modal").modal('show');
+			$("#pengujian_data_uji_modal").modal('show');
 		}
 	});
 
 }
 
-function render_edit_delete_button(id) {
-	let tmpl = $("#render-action-button-template").html();
-	tmpl = tmpl.replace('place_here', id);
+function render_detail_template(id) {
+	let tmpl = $("#render-detail-button-template").html();
 	tmpl = tmpl.replace('place_here', id);
 
 	return tmpl;
