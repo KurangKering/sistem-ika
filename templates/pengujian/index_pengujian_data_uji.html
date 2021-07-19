@@ -167,7 +167,7 @@
 
 $(function() {
 	$("#btn-mulai-pengujian").click(function(e) {
-		// $(".page-loader-wrapper").fadeIn();
+		$(".page-loader-wrapper").fadeIn();
 		$.ajax({
 			url: "{% url 'pengujian/pengujian_data_uji' %}",
 			type: 'GET',
