@@ -96,10 +96,16 @@ class Perhitungan:
 
     def get_human_rules(self):
         human_rules = []
+        rules = self.rules
+        nilai = self.nilai_fuzzy
         for i in range(len(self.rules)):
-            human = [f'{self._algs[x].get_identitas()} {self._algs[x].get_himpunan(self.rules[i][x])}' for x in range(len(self.rules[i]))]
+            v_fuzzy = [nilai[x][rules[i][x]] for x in range(5)]
+            v_nonfuzzy = [nilai[x][0] for x in range(5,13)]
+            combine_v = v_fuzzy + v_nonfuzzy
+
+            human = [f'{self._algs[x].get_identitas()} {self._algs[x].get_himpunan(self.rules[i][x])} BOBOT = {self._algs[x].get_bobot(self.rules[i][x])} SCORE = {round(combine_v[x], 3)}' for x in range(len(self.rules[i]))]
             string_human = ' & '.join(human)
-            string_human = f'IF {string_human} = {round(self.nilai_rules[i],4)}'
+            string_human = f'IF {string_human}, TARGET = {round(self.nilai_rules[i],4)}'
             human_rules.append(string_human)
         
         return human_rules

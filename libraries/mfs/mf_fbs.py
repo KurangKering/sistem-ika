@@ -14,8 +14,9 @@ class MF_Fbs(BaseMF):
             x = inputan.copy()
             
 
-        new_x = np.array(list(map(lambda y : 0 if y <= 120 else 1, x)))
+        # new_x = np.array(list(map(lambda y : 0 if y <= 120 else 1, x)))
 
+        new_x = x
         if (isinstance(inputan, np.ndarray) is False):
             return new_x
 

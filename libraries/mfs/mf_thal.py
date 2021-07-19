@@ -14,9 +14,12 @@ class MF_Thal(BaseMF):
         else:
             x = inputan.copy()
             
+        if any(i > 2 for i in x) or any(i < 0 for i in x):
+            raise ValueError('nilai berada diantara 0 dan 2')
 
-        new_x = np.array(list(map(lambda y : 0 if y < 5.5 else 2 if y > 6.2 else 1, x)))
+        # new_x = np.array(list(map(lambda y : 0 if y < 5.5 else 2 if y > 6.2 else 1, x)))
 
+        new_x = x
         if (isinstance(inputan, np.ndarray) is False):
             return new_x
 

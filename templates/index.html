@@ -8,7 +8,10 @@
 		<p>rules: </p>
 		{% for nomor, rules, nilai in rules_nilai  %}
 			<p>{{ nomor }}. {{ rules }}</p>
-			<p>{{ nilai }}</p>
+		{% endfor %}
+		<p>prediket: </p>
+		{% for  nomor, nilai in nilai_prediket %}
+			<p>{{ nomor }}. {{ nilai }}</p>
 		{% endfor %}
 	</body>
 </html>
