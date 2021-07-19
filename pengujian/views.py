@@ -8,7 +8,7 @@ from .forms import DataPengujianForm
 from django.forms.models import model_to_dict
 from utils.helper import set_kelas_klasifikasi
 from django.views.decorators.csrf import csrf_exempt
-
+import ast
 def index(request):
 	pass
 
@@ -17,10 +17,33 @@ def detail(request):
 
     id_data_uji = request.POST.get('id')
     data_pengujian = DataPengujian.objects.get(data_uji_id=id_data_uji)
-    serial_data_uji = model_to_dict(data_pengujian.data_uji)
+    data_pengujian.rules = ast.literal_eval(data_pengujian.rules)
+    data_uji = data_pengujian.data_uji
+    serial_data_uji = model_to_dict(data_uji)
     serial_data_pengujian = model_to_dict(data_pengujian)
 
-    context = context_response(True, {'data_uji': serial_data_uji, 'data_pengujian': serial_data_pengujian})
+    variables = {
+        'age': data_uji.age,
+        'trestbps': data_uji.trestbps,
+        'chol': data_uji.chol,
+        'thalach': data_uji.thalach,
+        'oldpeak': data_uji.oldpeak,
+        'sex': data_uji.sex,
+        'cp': data_uji.cp,
+        'fbs': data_uji.fbs,
+        'restach': data_uji.restach,
+        'exang': data_uji.exang,
+        'slope': data_uji.slope,
+        'ca': data_uji.ca,
+        'thal': data_uji.thal,
+            }
+
+    context = {
+        'data_uji': serial_data_uji,
+        'data_pengujian': serial_data_pengujian,
+        'variables': variables
+    }
+    context = context_response(True, context)
 
     return JsonResponse(context, safe=False)
 
@@ -64,12 +87,12 @@ def pengujian_data_uji(request):
         perhitungan = Perhitungan(data_uji_perhitungan[index_uji])
         perhitungan.mulai_perhitungan()
         cf_combine = perhitungan.get_cf_combine()
-        human_rules =  perhitungan.get_human_rules()
+        dict_output = perhitungan.get_dict_output()
         data_uji.datapengujian = DataPengujian()
         data_uji.datapengujian.cf_combine = cf_combine
         kelas = set_kelas_klasifikasi(cf_combine)
         data_uji.datapengujian.kelas = kelas
-        data_uji.datapengujian.rules = human_rules
+        data_uji.datapengujian.rules = str(dict_output)
         list_data_pengujian.append(data_uji.datapengujian)
         if (kelas == data_uji.target):
             total_benar = total_benar + 1

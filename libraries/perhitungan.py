@@ -1,5 +1,6 @@
 from libraries.mfs import *
 import numpy as np
+import copy
 class Perhitungan:
 
     _algs = [MF_Age, MF_Trestbps, MF_Chol, MF_Thalach, MF_Oldpeak, MF_Sex, MF_Cp, MF_Fbs, MF_Restach, MF_Exang, MF_Slope, MF_Ca, MF_Thal]
@@ -102,6 +103,40 @@ class Perhitungan:
             human_rules.append(string_human)
         
         return human_rules
+
+    def get_dict_output(self):
+        dict_rules = []
+        rules = self.rules
+        nilai = self.nilai_fuzzy
+        variables = [x.get_identitas() for x in self._algs]
+        prediket = self.nilai_prediket
+        target_rule = self.nilai_rules
+
+        list_bobot = []
+        list_himpunan = []
+        list_nilai = []
+        for i in range(len(rules)):
+            v_fuzzy = [nilai[x][rules[i][x]] for x in range(5)]
+            v_nonfuzzy = [nilai[x][0] for x in range(5,13)]
+            combine_v = v_fuzzy + v_nonfuzzy
+            local_nilai = [round(combine_v[x], 4) for x in range(len(combine_v))]
+            
+            bobot = [self._algs[x].get_bobot(rules[i][x]) for x in range(len(rules[i]))]
+            himpunan = [self._algs[x].get_himpunan(rules[i][x]) for x in range(len(rules[i]))]
+
+            list_bobot.append(bobot)
+            list_nilai.append(local_nilai)
+            list_himpunan.append(himpunan)
+
+        output = {
+            'variables': variables,
+            'bobot': list_bobot,
+            'himpunan': list_himpunan,
+            'prediket': prediket,
+            'target_rule': target_rule,
+            'nilai': list_nilai,
+        }
+        return output
     
     def get_human_bobot(self):
         human_bobot = []
